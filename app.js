@@ -15,6 +15,7 @@ const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
+  toggleGallerySpinner();
   imagesArea.style.display = 'block';
   gallery.innerHTML = '';
   // show gallery title
@@ -29,6 +30,7 @@ const showImages = (images) => {
 }
 
 const getImages = (query) => {
+  toggleGallerySpinner();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
@@ -49,6 +51,7 @@ const selectItem = (event, img) => {
 }
 var timer
 const createSlider = (duration) => {
+  toggleSliderSpinner();
   // check slider image length
   if (sliders.length < 2) {
     alert('Select at least 2 image.')
@@ -81,7 +84,8 @@ const createSlider = (duration) => {
     alt="">`;
     sliderContainer.appendChild(item)
   })
-  changeSlide(0)
+  toggleSliderSpinner();
+  changeSlide(0);
   timer = setInterval(function () {
     slideIndex++;
     changeSlide(slideIndex);
@@ -128,14 +132,12 @@ searchBtn.addEventListener('click', function () {
 
 // Enter press on search input field.......
 document.getElementById('search').addEventListener("keypress", function (event) {
-  // event.preventDefault();
   if (event.key == "Enter")
     searchBtn.click();
 });
 
 sliderBtn.addEventListener('click', function () {
   const duration = document.getElementById('duration');
-
   const sliderDuration = duration.value || 1000;
   if (sliderDuration < 0) {
     alert("Select any valid time duration.");
@@ -145,6 +147,19 @@ sliderBtn.addEventListener('click', function () {
   } else {
     createSlider(sliderDuration);
   }
-})
+});
 
+// Enter press on slider duration field.......
+document.getElementById('duration').addEventListener("keypress", function (event) {
+  if (event.key == "Enter")
+    sliderBtn.click();
+});
+
+const toggleGallerySpinner = () => {
+  imagesArea.style.display = 'none';
+  document.getElementById('spinner-gallery').classList.toggle('d-flex');
+}
+const toggleSliderSpinner = () => {
+  document.getElementById('spinner-slider').classList.toggle('d-flex');
+}
 
